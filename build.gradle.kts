@@ -7,4 +7,5 @@ plugins {
     alias(libs.plugins.kotlin.kapt) apply false
     alias(libs.plugins.kotlinx.serialization.json) apply false
     alias(libs.plugins.secret) apply false
+    alias(libs.plugins.android.library) apply false
 }

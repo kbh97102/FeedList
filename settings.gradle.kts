@@ -21,4 +21,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "FeedList"
 include(":app")
- 
+include(":domain")
+include(":data")
+include(":presentation")

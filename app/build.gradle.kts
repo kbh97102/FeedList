@@ -1,4 +1,3 @@
-import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 import java.io.FileInputStream
 import java.util.Properties
 
@@ -6,10 +5,6 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.hilt.plugin)
-    alias(libs.plugins.kotlin.kapt)
-    alias(libs.plugins.kotlinx.serialization.json)
-    alias(libs.plugins.secret)
 }
 
 val localProperties = Properties().apply {
@@ -49,20 +44,17 @@ android {
             )
         }
     }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
+    apply(from = "../common.gradle")
     buildFeatures {
-        compose = true
-        buildConfig = true
+        android.buildFeatures.buildConfig = true
     }
 }
 
 dependencies {
+
+    implementation(project(":domain"))
+    implementation(project(":data"))
+    implementation(project(":presentation"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -79,14 +71,4 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-//    add
-    implementation(libs.exoplayer)
-    implementation(libs.exoplayer.ui)
-    implementation(libs.exoplayer.common)
-    implementation(libs.hilt)
-    implementation(libs.hilt.navigation)
-    kapt(libs.hilt.compiler)
-    implementation(libs.kotlinx.serialization.json)
-    implementation(libs.compose.navigation)
-    implementation(libs.secret)
 }
