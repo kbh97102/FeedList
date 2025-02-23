@@ -13,6 +13,7 @@ hilt-navigation = "1.2.0"
 kotlinx-serialization-json = "1.8.0-RC"
 compose-navigation = "2.8.7"
 exoplayer = "1.5.1"
+secret = "2.0.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -38,6 +39,7 @@ compose-navigation = { module = "androidx.navigation:navigation-compose", versio
 exoplayer = { group = "androidx.media3", name = "media3-exoplayer", version.ref = "exoplayer" }
 exoplayer-ui = { group = "androidx.media3", name = "media3-ui", version.ref = "exoplayer" }
 exoplayer-common = { group = "androidx.media3", name = "media3-common", version.ref = "exoplayer" }
+secret = { group = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", name = "secrets-gradle-plugin", version.ref = "secret" }
 
 
 [plugins]
@@ -48,3 +50,4 @@ kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "ko
 hilt-plugin = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 kotlinx-serialization-json = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+secret = {id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "secret"}

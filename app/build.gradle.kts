@@ -1,3 +1,7 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -5,6 +9,18 @@ plugins {
     alias(libs.plugins.hilt.plugin)
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.kotlinx.serialization.json)
+    alias(libs.plugins.secret)
+}
+
+val localProperties = Properties().apply {
+    val localPropertiesFile = rootProject.file("local.properties")
+    if (localPropertiesFile.exists()) {
+        load(FileInputStream(localPropertiesFile))
+    }
+}
+
+fun getLocalProperty(key: String, defaultValue: String = ""): String {
+    return localProperties.getProperty(key, defaultValue)
 }
 
 android {
@@ -19,6 +35,9 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+
+        buildConfigField("String", "API_KEY", getLocalProperty("API_KEY"))
     }
 
     buildTypes {
@@ -39,6 +58,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -68,4 +88,5 @@ dependencies {
     kapt(libs.hilt.compiler)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.compose.navigation)
+    implementation(libs.secret)
 }
