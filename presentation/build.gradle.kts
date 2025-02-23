@@ -41,4 +41,5 @@ dependencies {
     implementation(libs.compose.navigation)
     implementation(libs.secret)
     implementation(libs.androidx.material3.android)
+    implementation(libs.androidx.ui.tooling.preview.android)
 }
