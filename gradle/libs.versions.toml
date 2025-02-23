@@ -7,7 +7,12 @@ junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 lifecycleRuntimeKtx = "2.8.7"
 activityCompose = "1.9.3"
-composeBom = "2024.04.01"
+composeBom = "2025.02.00"
+hilt = "2.52"
+hilt-navigation = "1.2.0"
+kotlinx-serialization-json = "1.8.0-RC"
+compose-navigation = "2.8.7"
+exoplayer = "1.5.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -24,9 +29,22 @@ androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+#add
+hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
+hilt-navigation = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hilt-navigation" }
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization-json" }
+compose-navigation = { module = "androidx.navigation:navigation-compose", version.ref = "compose-navigation" }
+exoplayer = { group = "androidx.media3", name = "media3-exoplayer", version.ref = "exoplayer" }
+exoplayer-ui = { group = "androidx.media3", name = "media3-ui", version.ref = "exoplayer" }
+exoplayer-common = { group = "androidx.media3", name = "media3-common", version.ref = "exoplayer" }
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-
+#add
+hilt-plugin = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
+kotlinx-serialization-json = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

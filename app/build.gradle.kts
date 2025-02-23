@@ -2,11 +2,14 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.hilt.plugin)
+    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.kotlinx.serialization.json)
 }
 
 android {
     namespace = "com.arakene.feedlist"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.arakene.feedlist"
@@ -56,4 +59,13 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+//    add
+    implementation(libs.exoplayer)
+    implementation(libs.exoplayer.ui)
+    implementation(libs.exoplayer.common)
+    implementation(libs.hilt)
+    implementation(libs.hilt.navigation)
+    kapt(libs.hilt.compiler)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.compose.navigation)
 }
