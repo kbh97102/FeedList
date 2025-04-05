@@ -1,18 +1,19 @@
 [versions]
 agp = "8.7.0"
-kotlin = "2.0.0"
+kotlin = "2.1.20"
 coreKtx = "1.15.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 lifecycleRuntimeKtx = "2.8.7"
 activityCompose = "1.9.3"
-composeBom = "2025.02.00"
-hilt = "2.50"
+composeBom = "2025.03.01"
+hilt = "2.51.1"
 hilt-navigation = "1.1.0"
 kotlinx-serialization-json = "1.8.0-RC"
 compose-navigation = "2.8.7"
-exoplayer = "1.5.1"
+exoplayer = "1.6.0"
+retrofit = "2.11.0"
 secret = "2.0.1"
 appcompat = "1.7.0"
 material = "1.12.0"
@@ -43,6 +44,7 @@ compose-navigation = { module = "androidx.navigation:navigation-compose", versio
 exoplayer = { group = "androidx.media3", name = "media3-exoplayer", version.ref = "exoplayer" }
 exoplayer-ui = { group = "androidx.media3", name = "media3-ui", version.ref = "exoplayer" }
 exoplayer-common = { group = "androidx.media3", name = "media3-common", version.ref = "exoplayer" }
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 secret = { group = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", name = "secrets-gradle-plugin", version.ref = "secret" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
@@ -60,3 +62,4 @@ hilt-plugin = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 kotlinx-serialization-json = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 secret = {id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "secret"}
+kotlin-serialzable = {id = "plugin.serialization", version.ref = "kotlin"}
