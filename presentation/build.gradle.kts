@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-//    alias(libs.plugins.hilt.plugin)
+    alias(libs.plugins.hilt.plugin)
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.kotlinx.serialization.json)
     alias(libs.plugins.secret)
@@ -22,6 +22,7 @@ android {
     apply(from = "../common.gradle")
 
     buildFeatures {
+        viewBinding = true
         compose = true
     }
 }
@@ -42,4 +43,8 @@ dependencies {
     implementation(libs.secret)
     implementation(libs.androidx.material3.android)
     implementation(libs.androidx.ui.tooling.preview.android)
+
+    implementation(libs.hilt)
+    kapt(libs.hilt.compiler)
+    implementation(libs.hilt.navigation)
 }

@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     kotlin("plugin.serialization") version "2.1.20"
     alias(libs.plugins.hilt.plugin)
+    alias(libs.plugins.kotlin.kapt)
 }
 
 android {
@@ -28,5 +29,5 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.hilt)
-    implementation(libs.hilt.compiler)
+    kapt(libs.hilt.compiler)
 }
