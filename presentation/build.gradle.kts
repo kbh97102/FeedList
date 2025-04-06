@@ -47,4 +47,6 @@ dependencies {
     implementation(libs.hilt)
     kapt(libs.hilt.compiler)
     implementation(libs.hilt.navigation)
+    // https://mvnrepository.com/artifact/androidx.paging/paging-compose
+    runtimeOnly(libs.androidx.paging.compose)
 }
