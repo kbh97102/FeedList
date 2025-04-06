@@ -26,4 +26,5 @@ dependencies {
     implementation(libs.retrofit)
     kapt(libs.hilt.compiler)
     implementation(libs.hilt)
+    implementation(libs.androidx.paging.runtime)
 }
