@@ -15,14 +15,32 @@ data class VideoDto(
     @SerialName("user") val user: UserDto,
     @SerialName("video_files") val videoFiles: List<VideoFileDto>,
     @SerialName("video_pictures") val videoPictures: List<VideoPictureDto>
-)
+){
+    companion object {
+        fun empty() = VideoDto(
+            id = 0,
+            width = 0,
+            height = 0,
+            url = "",
+            image = "",
+            fullRes = null,
+            tags = emptyList(),
+            duration = 0,
+            user = UserDto(),
+            videoFiles = emptyList(),
+            videoPictures = emptyList()
+        )
+    }
+}
 
 @Serializable
 data class UserDto(
     @SerialName("id") val id: Int,
     @SerialName("name") val name: String,
     @SerialName("url") val url: String
-)
+) {
+    constructor(): this(0, "", "")
+}
 
 @Serializable
 data class VideoFileDto(

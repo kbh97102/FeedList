@@ -13,6 +13,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.arakene.presentation.ui.FeedListView
 import com.arakene.presentation.ui.theme.FeedListTheme
 import com.arakene.presentation.viewmodel.VideoViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -21,44 +22,11 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+
         setContent {
             FeedListTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                FeedListView()
             }
         }
-    }
-}
-
-// 3jIoUzX5NHTqXH84M41UumY676KIrp05LN4itIMRTOBferYjzF2zo8iE
-
-@Composable
-fun Greeting(
-    name: String,
-    modifier: Modifier = Modifier,
-    viewModel: VideoViewModel = hiltViewModel()
-) {
-    LaunchedEffect(viewModel) {
-
-        viewModel.testMethod()
-
-    }
-
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    FeedListTheme {
-        Greeting("Android")
     }
 }

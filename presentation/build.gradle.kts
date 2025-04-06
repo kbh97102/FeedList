@@ -43,7 +43,7 @@ dependencies {
     implementation(libs.secret)
     implementation(libs.androidx.material3.android)
     implementation(libs.androidx.ui.tooling.preview.android)
-
+    implementation(libs.compose)
     implementation(libs.hilt)
     kapt(libs.hilt.compiler)
     implementation(libs.hilt.navigation)
