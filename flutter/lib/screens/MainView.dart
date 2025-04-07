@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:feed_list/screens/FeedItem.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
@@ -25,9 +26,8 @@ class MainView extends StatelessWidget {
                 color: Colors.red,
                 child: SizedBox(
                   height: 50.0 + random.nextInt(150),
-                  child: Text(
-                    testList[index],
-                    style: TextStyle(color: Colors.black),
+                  child: FeedItem(
+                    imageUrl: "http://via.placeholder.com/350x150",
                   ),
                 ),
               );
