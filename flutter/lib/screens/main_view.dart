@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:feed_list/screens/FeedItem.dart';
+import 'package:feed_list/screens/feed_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
