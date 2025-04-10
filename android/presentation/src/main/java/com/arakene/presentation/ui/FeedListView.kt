@@ -13,7 +13,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.arakene.presentation.LogD
 import com.arakene.presentation.viewmodel.VideoViewModel
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.rememberGlidePreloadingData
@@ -32,15 +31,11 @@ fun FeedListView(
 
     LaunchedEffect(Unit) {
         viewModel.testMethod()
+//        viewModel.searchVideos("Ocean")
+//        viewModel.getVideo(1093652)
     }
 
     val items = viewModel.testVideos.collectAsLazyPagingItems()
-
-    LaunchedEffect(items.loadState) {
-
-        LogD("State ${items.loadState}")
-
-    }
 
     val preloadImage = rememberGlidePreloadingData(
         items.itemSnapshotList.items,
@@ -50,6 +45,11 @@ fun FeedListView(
     ) { dataItem, requestBuilder ->
         requestBuilder.load(dataItem.image)
     }
+
+
+//    items.itemSnapshotList.firstOrNull()?.let { video ->
+//        FeedItem(video, onFavoriteClick = {})
+//    }
 
 
     LazyVerticalStaggeredGrid(
@@ -68,7 +68,6 @@ fun FeedListView(
             val (dataItem, preloadRequest) = preloadImage[it]
             FeedItem(
                 videoDto = dataItem,
-                preloadRequest = preloadRequest,
                 onFavoriteClick = {
 
                 }

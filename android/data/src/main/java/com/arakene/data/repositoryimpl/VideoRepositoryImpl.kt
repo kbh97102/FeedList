@@ -18,8 +18,8 @@ class VideoRepositoryImpl @Inject constructor(
     private val api: Api
 ) : VideoRepository {
 
-    override suspend fun getVideos(): VideoListResponse? {
-        return api.getVideos().body()
+    override suspend fun getVideos(search: String): VideoListResponse? {
+        return api.getVideos(search).body()
     }
 
     override suspend fun getPopularVideo(): Flow<PagingData<VideoDto>> {
@@ -34,7 +34,7 @@ class VideoRepositoryImpl @Inject constructor(
         ).flow
     }
 
-    override suspend fun getVideo(id: String): VideoListResponse {
-        return api.getVideos(id).body()!!
+    override suspend fun getVideo(id: Int): VideoDto? {
+        return api.getVideo(id).body()
     }
 }

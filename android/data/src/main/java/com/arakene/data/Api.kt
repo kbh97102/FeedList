@@ -10,7 +10,9 @@ import retrofit2.http.Query
 interface Api {
 
     @GET("videos/search")
-    suspend fun getVideos(): Response<VideoListResponse>
+    suspend fun getVideos(
+        @Query("query") query: String
+    ): Response<VideoListResponse>
 
     @GET("videos/popular")
     suspend fun getPopularVideos(
@@ -19,8 +21,8 @@ interface Api {
     ): Response<VideoListResponse>
 
     @GET("videos/videos/{id}")
-    suspend fun getVideos(
-        @Path("id") id: String
-    ): Response<VideoListResponse>
+    suspend fun getVideo(
+        @Path("id") id: Int
+    ): Response<VideoDto>
 
 }

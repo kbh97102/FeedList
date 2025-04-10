@@ -3,10 +3,10 @@ package com.arakene.domain.usecases
 import com.arakene.domain.repository.VideoRepository
 import javax.inject.Inject
 
-class GetVideoUseCase @Inject constructor(
+class GetSearchVideoUseCase @Inject constructor(
     private val repository: VideoRepository
 ) {
 
-    suspend operator fun invoke(id: Int) = repository.getVideo(id)
+    suspend operator fun invoke(search: String) = repository.getVideos(search)
 
 }

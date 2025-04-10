@@ -31,4 +31,5 @@ dependencies {
     implementation(libs.hilt)
     kapt(libs.hilt.compiler)
     implementation(libs.androidx.paging.runtime)
+    implementation(libs.gson)
 }

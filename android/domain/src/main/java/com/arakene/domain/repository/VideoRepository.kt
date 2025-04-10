@@ -7,10 +7,10 @@ import kotlinx.coroutines.flow.Flow
 
 interface VideoRepository {
 
-    suspend fun getVideos(): VideoListResponse?
+    suspend fun getVideos(search: String): VideoListResponse?
 
     suspend fun getPopularVideo(): Flow<PagingData<VideoDto>>
 
-    suspend fun getVideo(id: String): VideoListResponse
+    suspend fun getVideo(id: Int): VideoDto?
 
 }

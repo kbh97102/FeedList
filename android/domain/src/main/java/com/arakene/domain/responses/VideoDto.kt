@@ -1,21 +1,24 @@
 package com.arakene.domain.responses
-import kotlinx.serialization.SerialName
+
+import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
+
 
 @Serializable
 data class VideoDto(
-    @SerialName("id") val id: Int,
-    @SerialName("width") val width: Int,
-    @SerialName("height") val height: Int,
-    @SerialName("url") val url: String,
-    @SerialName("image") val image: String,
-    @SerialName("full_res") val fullRes: String? = null,
-    @SerialName("tags") val tags: List<String>,
-    @SerialName("duration") val duration: Int,
-    @SerialName("user") val user: UserDto,
-    @SerialName("video_files") val videoFiles: List<VideoFileDto>,
-    @SerialName("video_pictures") val videoPictures: List<VideoPictureDto>
-){
+    @SerializedName("id") val id: Int,
+    @SerializedName("width") val width: Int,
+    @SerializedName("height") val height: Int,
+    @SerializedName("duration") val duration: Int,
+    @SerializedName("full_res") val fullRes: String? = null,
+    @SerializedName("tags") val tags: List<String> = emptyList(),
+    @SerializedName("url") val url: String,
+    @SerializedName("image") val image: String,
+    @SerializedName("avg_color") val avgColor: String? = null,
+    @SerializedName("user") val user: UserDto,
+    @SerializedName("video_files") val videoFiles: List<VideoFileDto>,
+    @SerializedName("video_pictures") val videoPictures: List<VideoPictureDto>
+) {
     companion object {
         fun empty() = VideoDto(
             id = 0,
@@ -35,27 +38,27 @@ data class VideoDto(
 
 @Serializable
 data class UserDto(
-    @SerialName("id") val id: Int,
-    @SerialName("name") val name: String,
-    @SerialName("url") val url: String
+    @SerializedName("id") val id: Int,
+    @SerializedName("name") val name: String,
+    @SerializedName("url") val url: String
 ) {
-    constructor(): this(0, "", "")
+    constructor() : this(0, "", "")
 }
 
 @Serializable
 data class VideoFileDto(
-    @SerialName("id") val id: Int,
-    @SerialName("quality") val quality: String,
-    @SerialName("file_type") val fileType: String,
-    @SerialName("width") val width: Int,
-    @SerialName("height") val height: Int,
-    @SerialName("fps") val fps: Double,
-    @SerialName("link") val link: String
+    @SerializedName("id") val id: Int?,
+    @SerializedName("quality") val quality: String?,
+    @SerializedName("file_type") val fileType: String?,
+    @SerializedName("width") val width: Int?,
+    @SerializedName("height") val height: Int?,
+    @SerializedName("fps") val fps: Double?,
+    @SerializedName("link") val link: String?,
 )
 
 @Serializable
 data class VideoPictureDto(
-    @SerialName("id") val id: Int,
-    @SerialName("picture") val picture: String,
-    @SerialName("nr") val nr: Int
+    @SerializedName("id") val id: Int,
+    @SerializedName("nr") val nr: Int,
+    @SerializedName("picture") val picture: String
 )

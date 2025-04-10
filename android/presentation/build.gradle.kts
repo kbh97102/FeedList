@@ -45,6 +45,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview.android)
     implementation(libs.compose)
     implementation(libs.hilt)
+    implementation(libs.androidx.media3.datasource.cronet)
     debugImplementation(libs.ui.tooling)
     kapt(libs.hilt.compiler)
     implementation(libs.hilt.navigation)
@@ -52,4 +53,10 @@ dependencies {
     implementation(libs.androidx.paging.compose)
     implementation(libs.androidx.paging.runtime.ktx)
     implementation(libs.coil.compose)
+
+    implementation(libs.exoplayer)
+    implementation(libs.androidx.media3.exoplayer.dash)
+    implementation(libs.exoplayer.ui)
+
+    implementation(libs.cronet.embedded)
 }
