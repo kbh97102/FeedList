@@ -128,6 +128,9 @@ fun FeedItem(
             .aspectRatio(ratio)
             .clickable {
                 onClick(videoDto.id)
+                if (currentPlayingID == videoDto.id) {
+                    player.stop()
+                }
             },
         contentAlignment = Alignment.TopEnd
     ) {
