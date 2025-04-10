@@ -133,7 +133,10 @@ fun FeedItem(
         GlideImage(
             model = videoDto.image,
             contentDescription = null,
-            contentScale = ContentScale.Crop
+            contentScale = ContentScale.FillBounds,
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(ratio)
         ) {
             it.diskCacheStrategy(DiskCacheStrategy.ALL)
                 .skipMemoryCache(false)
