@@ -45,6 +45,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview.android)
     implementation(libs.compose)
     implementation(libs.hilt)
+    debugImplementation(libs.ui.tooling)
     kapt(libs.hilt.compiler)
     implementation(libs.hilt.navigation)
     // https://mvnrepository.com/artifact/androidx.paging/paging-compose
