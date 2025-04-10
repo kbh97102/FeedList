@@ -70,7 +70,11 @@ fun FeedListView(
                 videoDto = dataItem,
                 onFavoriteClick = {
 
-                }
+                },
+                onClick = {
+                    viewModel.currentPlayingVideoId = it
+                },
+                currentPlayingID = viewModel.currentPlayingVideoId
             )
         }
     }

@@ -1,5 +1,8 @@
 package com.arakene.presentation.viewmodel
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
@@ -27,6 +30,8 @@ class VideoViewModel @Inject constructor(
 
     val videos = MutableStateFlow<PagingData<VideoDto>>(PagingData.empty())
     val testVideos: Flow<PagingData<VideoDto>> get() = videos
+
+    var currentPlayingVideoId by mutableStateOf(-1)
 
     fun testMethod() = viewModelScope.launch {
         getPopularVideoUseCase()

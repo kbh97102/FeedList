@@ -44,6 +44,8 @@ import java.util.concurrent.Executors
 @Composable
 fun FeedItem(
     videoDto: VideoDto,
+    onClick: (Int) -> Unit,
+    currentPlayingID: Int,
     onFavoriteClick: () -> Unit,
     modifier: Modifier = Modifier,
     isFavorite: Boolean = false
@@ -51,8 +53,8 @@ fun FeedItem(
 
     val context = LocalContext.current
 
-    var playVideo by remember {
-        mutableStateOf(false)
+    var playVideo by remember(currentPlayingID) {
+        mutableStateOf(videoDto.id == currentPlayingID)
     }
 
     val ratio by remember(videoDto) {
@@ -108,6 +110,8 @@ fun FeedItem(
                     }
                 }
             })
+        } else {
+            player.stop()
         }
     }
 
@@ -123,9 +127,7 @@ fun FeedItem(
             .fillMaxWidth()
             .aspectRatio(ratio)
             .clickable {
-                if (!playVideo) {
-                    playVideo = true
-                }
+                onClick(videoDto.id)
             },
         contentAlignment = Alignment.TopEnd
     ) {
