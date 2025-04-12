@@ -74,7 +74,8 @@ fun FeedListView(
                 onClick = {
                     viewModel.currentPlayingVideoId = it
                 },
-                currentPlayingID = viewModel.currentPlayingVideoId
+                currentPlayingID = viewModel.currentPlayingVideoId,
+                preloadRequest = preloadRequest
             )
         }
     }

@@ -1,5 +1,6 @@
 package com.arakene.presentation.ui
 
+import android.graphics.drawable.Drawable
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
@@ -34,6 +35,7 @@ import androidx.media3.ui.PlayerView
 import com.arakene.domain.responses.VideoDto
 import com.arakene.presentation.LogE
 import com.arakene.presentation.R
+import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -44,6 +46,7 @@ import java.util.concurrent.Executors
 @Composable
 fun FeedItem(
     videoDto: VideoDto,
+    preloadRequest: RequestBuilder<Drawable>,
     onClick: (Int) -> Unit,
     currentPlayingID: Int,
     onFavoriteClick: () -> Unit,
@@ -87,12 +90,10 @@ fun FeedItem(
     DisposableEffect(player) {
         player.apply {
             setMediaItem(MediaItem.fromUri(videoDto.videoFiles.first().link ?: ""))
-//            playWhenReady = true
             this.repeatMode = Player.REPEAT_MODE_ALL
         }
 
         onDispose {
-            LogE("여기오니?")
             player.release()
         }
     }
@@ -113,10 +114,6 @@ fun FeedItem(
         } else {
             player.stop()
         }
-    }
-
-    LaunchedEffect(ratio) {
-        LogE("id ${videoDto.id} Ratio? ${ratio}")
     }
 
     /*
@@ -145,6 +142,7 @@ fun FeedItem(
         ) {
             it.diskCacheStrategy(DiskCacheStrategy.ALL)
                 .skipMemoryCache(false)
+                .thumbnail(preloadRequest)
         }
 
 
