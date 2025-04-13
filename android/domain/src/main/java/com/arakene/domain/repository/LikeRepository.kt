@@ -10,5 +10,5 @@ interface LikeRepository {
 
     suspend fun insert(like: Like)
 
-    suspend fun delete(like: Like)
+    suspend fun delete(videoId: Int)
 }

@@ -31,6 +31,7 @@ fun FeedListView(
 
     LaunchedEffect(Unit) {
         viewModel.testMethod()
+        viewModel.getAllLikes()
 //        viewModel.searchVideos("Ocean")
 //        viewModel.getVideo(1093652)
     }
@@ -69,13 +70,14 @@ fun FeedListView(
             FeedItem(
                 videoDto = dataItem,
                 onFavoriteClick = {
-
+                    viewModel.clickLike(it)
                 },
                 onClick = {
                     viewModel.currentPlayingVideoId = it
                 },
                 currentPlayingID = viewModel.currentPlayingVideoId,
-                preloadRequest = preloadRequest
+                preloadRequest = preloadRequest,
+                currentFavorite = viewModel.likes.any { it.videoId == dataItem.id }
             )
         }
     }

@@ -18,7 +18,7 @@ interface LikeDao {
     @Insert
     suspend fun insert(like: Like)
 
-    @Delete
-    suspend fun delete(like: Like)
+    @Query("DELETE FROM `like` WHERE videoId in (:videoId)")
+    suspend fun delete(videoId: Int)
 
 }

@@ -89,4 +89,4 @@ kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 kotlinx-serialization-json = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 secret = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "secret" }
 kotlin-serialzable = { id = "plugin.serialization", version.ref = "kotlin" }
-ksp = { id = "com.google.devtools.ksp", version = "2.0.21-1.0.27"}
+ksp = { id = "com.google.devtools.ksp", version = "2.1.20-2.0.0"}

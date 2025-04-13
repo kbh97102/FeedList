@@ -21,7 +21,7 @@ class LikeRepositoryImpl @Inject constructor(
         return dao.insert(like)
     }
 
-    override suspend fun delete(like: Like) {
-        return dao.delete(like)
+    override suspend fun delete(videoId: Int) {
+        return dao.delete(videoId)
     }
 }

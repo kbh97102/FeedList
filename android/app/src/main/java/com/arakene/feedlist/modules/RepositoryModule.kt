@@ -1,7 +1,10 @@
 package com.arakene.feedlist.modules
 
 import com.arakene.data.Api
+import com.arakene.data.db.LikeDao
+import com.arakene.data.repositoryimpl.LikeRepositoryImpl
 import com.arakene.data.repositoryimpl.VideoRepositoryImpl
+import com.arakene.domain.repository.LikeRepository
 import com.arakene.domain.repository.VideoRepository
 import dagger.Binds
 import dagger.Module
@@ -18,6 +21,13 @@ class RepositoryModule {
         api: Api
     ): VideoRepository {
         return VideoRepositoryImpl(api)
+    }
+
+    @Provides
+    fun bindLikeRepository(
+        dao: LikeDao
+    ): LikeRepository{
+        return LikeRepositoryImpl(dao)
     }
 
 }

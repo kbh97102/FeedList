@@ -49,10 +49,14 @@ fun FeedItem(
     preloadRequest: RequestBuilder<Drawable>,
     onClick: (Int) -> Unit,
     currentPlayingID: Int,
-    onFavoriteClick: () -> Unit,
+    onFavoriteClick: (VideoDto) -> Unit,
+    currentFavorite: Boolean,
     modifier: Modifier = Modifier,
-    isFavorite: Boolean = false
 ) {
+
+    val isFavorite by remember(currentFavorite) {
+        mutableStateOf(currentFavorite)
+    }
 
     val context = LocalContext.current
 
@@ -177,7 +181,7 @@ fun FeedItem(
                 .padding(end = 10.dp, top = 10.dp)
                 .size(16.dp)
                 .clickable {
-                    onFavoriteClick()
+                    onFavoriteClick(videoDto)
                 },
             contentDescription = null
         )

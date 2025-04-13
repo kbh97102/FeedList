@@ -19,6 +19,7 @@ data class VideoDto(
     @SerializedName("video_files") val videoFiles: List<VideoFileDto>,
     @SerializedName("video_pictures") val videoPictures: List<VideoPictureDto>
 ) {
+
     companion object {
         fun empty() = VideoDto(
             id = 0,

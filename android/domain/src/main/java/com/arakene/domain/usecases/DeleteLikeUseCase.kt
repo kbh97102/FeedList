@@ -8,6 +8,6 @@ class DeleteLikeUseCase @Inject constructor(
     private val likeRepository: LikeRepository
 ) {
 
-    suspend operator fun invoke(like: Like) = likeRepository.delete(like)
+    suspend operator fun invoke(videoId: Int) = likeRepository.delete(videoId)
 
 }
