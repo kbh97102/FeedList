@@ -4,9 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.arakene.domain.responses.ApiResult
-import dagger.hilt.android.lifecycle.HiltViewModel
 
-@HiltViewModel
 open class BaseViewModel : ViewModel() {
 
     private var _error = MutableLiveData<Pair<String, String>?>(null)

@@ -14,13 +14,15 @@ import com.arakene.domain.usecases.GetPopularVideoUseCase
 import com.arakene.domain.usecases.GetSearchVideoUseCase
 import com.arakene.domain.usecases.GetVideoUseCase
 import com.arakene.domain.usecases.InsertLikeUseCase
+import com.arakene.presentation.LogD
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-
+@HiltViewModel
 class VideoViewModel @Inject constructor(
     private val getSearchVideoUseCase: GetSearchVideoUseCase,
     private val getPopularVideoUseCase: GetPopularVideoUseCase,
@@ -48,6 +50,7 @@ class VideoViewModel @Inject constructor(
         getResponse {
             getSearchVideoUseCase(search)
         }?.let {
+            LogD(it.toString())
             // Do SomeThing
         }
     }

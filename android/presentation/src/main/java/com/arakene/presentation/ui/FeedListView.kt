@@ -32,6 +32,7 @@ fun FeedListView(
     LaunchedEffect(Unit) {
         viewModel.testMethod()
         viewModel.getAllLikes()
+        viewModel.searchVideos("Ocean")
 //        viewModel.searchVideos("Ocean")
 //        viewModel.getVideo(1093652)
     }
