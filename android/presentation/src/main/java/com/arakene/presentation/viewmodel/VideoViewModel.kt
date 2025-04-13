@@ -4,7 +4,6 @@ package com.arakene.presentation.viewmodel
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import com.arakene.domain.entities.Like
@@ -15,8 +14,6 @@ import com.arakene.domain.usecases.GetPopularVideoUseCase
 import com.arakene.domain.usecases.GetSearchVideoUseCase
 import com.arakene.domain.usecases.GetVideoUseCase
 import com.arakene.domain.usecases.InsertLikeUseCase
-import com.arakene.presentation.LogE
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -48,14 +45,18 @@ class VideoViewModel @Inject constructor(
     }
 
     fun searchVideos(search: String) = viewModelScope.launch {
-        getSearchVideoUseCase(search)?.let { result ->
-//            LogD(result.toString())
+        getResponse {
+            getSearchVideoUseCase(search)
+        }?.let {
+            // Do SomeThing
         }
     }
 
     fun getVideo(id: Int) = viewModelScope.launch {
-        getVideoUseCase(id)?.let { result ->
-            LogE(result.toString())
+        getResponse {
+            getVideoUseCase(id)
+        }?.let {
+            // Do SomeThing
         }
     }
 
@@ -74,7 +75,7 @@ class VideoViewModel @Inject constructor(
      */
     fun clickLike(videoDto: VideoDto) {
         viewModelScope.launch {
-            if (likes.any { it.videoId == videoDto.id }){
+            if (likes.any { it.videoId == videoDto.id }) {
                 deleteLikeUseCase(videoId = videoDto.id)
             } else {
                 insertLike(videoDto)

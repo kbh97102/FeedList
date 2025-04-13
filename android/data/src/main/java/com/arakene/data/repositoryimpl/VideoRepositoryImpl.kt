@@ -5,7 +5,9 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.arakene.data.Api
 import com.arakene.data.datasource.PopularVideosDataSource
+import com.arakene.data.util.safeApi
 import com.arakene.domain.repository.VideoRepository
+import com.arakene.domain.responses.ApiResult
 import com.arakene.domain.responses.VideoDto
 import com.arakene.domain.responses.VideoListResponse
 import kotlinx.coroutines.flow.Flow
@@ -18,8 +20,10 @@ class VideoRepositoryImpl @Inject constructor(
     private val api: Api
 ) : VideoRepository {
 
-    override suspend fun getVideos(search: String): VideoListResponse? {
-        return api.getVideos(search).body()
+    override suspend fun getVideos(search: String): ApiResult<VideoListResponse> {
+        return safeApi {
+            api.getVideos(search)
+        }
     }
 
     override suspend fun getPopularVideo(): Flow<PagingData<VideoDto>> {
@@ -34,7 +38,9 @@ class VideoRepositoryImpl @Inject constructor(
         ).flow
     }
 
-    override suspend fun getVideo(id: Int): VideoDto? {
-        return api.getVideo(id).body()
+    override suspend fun getVideo(id: Int): ApiResult<VideoDto> {
+        return safeApi {
+            api.getVideo(id)
+        }
     }
 }
