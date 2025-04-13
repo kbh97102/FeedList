@@ -23,7 +23,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@HiltViewModel
+
 class VideoViewModel @Inject constructor(
     private val getSearchVideoUseCase: GetSearchVideoUseCase,
     private val getPopularVideoUseCase: GetPopularVideoUseCase,
@@ -31,7 +31,7 @@ class VideoViewModel @Inject constructor(
     private val getAllLikesUseCase: GetAllLikesUseCase,
     private val insertLikeUseCase: InsertLikeUseCase,
     private val deleteLikeUseCase: DeleteLikeUseCase
-) : ViewModel() {
+) : BaseViewModel() {
 
     val videos = MutableStateFlow<PagingData<VideoDto>>(PagingData.empty())
     val testVideos: Flow<PagingData<VideoDto>> get() = videos
