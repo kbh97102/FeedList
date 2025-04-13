@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -33,7 +34,6 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import androidx.media3.ui.PlayerView
 import com.arakene.domain.responses.VideoDto
-import com.arakene.presentation.LogE
 import com.arakene.presentation.R
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
@@ -62,6 +62,10 @@ fun FeedItem(
 
     var playVideo by remember(currentPlayingID) {
         mutableStateOf(videoDto.id == currentPlayingID)
+    }
+
+    var isLoading by remember {
+        mutableStateOf(false)
     }
 
     val ratio by remember(videoDto) {
@@ -112,6 +116,7 @@ fun FeedItem(
                     if (playbackState == Player.STATE_READY) {
                         player.play()
                         controlPlayerVisible = true
+                        isLoading = false
                     }
                 }
             })
@@ -131,6 +136,8 @@ fun FeedItem(
                 onClick(videoDto.id)
                 if (currentPlayingID == videoDto.id) {
                     player.stop()
+                } else {
+                    isLoading = true
                 }
             },
         contentAlignment = Alignment.TopEnd
@@ -168,6 +175,11 @@ fun FeedItem(
             }
         )
 
+        if (isLoading) {
+            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator()
+            }
+        }
 
         Icon(
             painter = painterResource(
