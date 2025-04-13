@@ -14,8 +14,6 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 
-// TODO: Response Wrapper 생성해서 추가
-// TODO: 임시로 빌드하려고 수정
 class VideoRepositoryImpl @Inject constructor(
     private val api: Api
 ) : VideoRepository {
