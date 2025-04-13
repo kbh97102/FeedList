@@ -3,7 +3,6 @@ package com.arakene.presentation.ui
 import androidx.compose.foundation.gestures.FlingBehavior
 import androidx.compose.foundation.gestures.ScrollScope
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
@@ -13,18 +12,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.arakene.presentation.Screens
 import com.arakene.presentation.viewmodel.VideoViewModel
-import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.rememberGlidePreloadingData
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlin.math.abs
 
 
-@OptIn(ExperimentalLayoutApi::class, ExperimentalGlideComposeApi::class)
 @Composable
 fun FeedListView(
-    viewModel: VideoViewModel = hiltViewModel()
+    navigate: (Screens) -> Unit,
+    viewModel: VideoViewModel = hiltViewModel(),
 ) {
 
     val state = rememberLazyStaggeredGridState()
@@ -78,7 +77,8 @@ fun FeedListView(
                 },
                 currentPlayingID = viewModel.currentPlayingVideoId,
                 preloadRequest = preloadRequest,
-                currentFavorite = viewModel.likes.any { it.videoId == dataItem.id }
+                currentFavorite = viewModel.likes.any { it.videoId == dataItem.id },
+                navigate = navigate
             )
         }
     }

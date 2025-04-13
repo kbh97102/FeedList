@@ -34,7 +34,9 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import androidx.media3.ui.PlayerView
 import com.arakene.domain.responses.VideoDto
+import com.arakene.presentation.NavigationCompositionLocal
 import com.arakene.presentation.R
+import com.arakene.presentation.Screens
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
@@ -52,6 +54,7 @@ fun FeedItem(
     onFavoriteClick: (VideoDto) -> Unit,
     currentFavorite: Boolean,
     modifier: Modifier = Modifier,
+    navigate: (Screens) -> Unit = NavigationCompositionLocal.current
 ) {
 
     val isFavorite by remember(currentFavorite) {
@@ -136,6 +139,8 @@ fun FeedItem(
                 onClick(videoDto.id)
                 if (currentPlayingID == videoDto.id) {
                     player.stop()
+
+                    navigate(Screens.Detail(videoDto))
                 } else {
                     isLoading = true
                 }
