@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.arakene.domain.responses.VideoDto
@@ -63,8 +64,8 @@ fun ControlMenu(
 ) {
 
     Row(modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
-        Text("Play", modifier = Modifier.clickable { play() })
-        Text("Stop", modifier = Modifier.clickable { stop() })
+        Text("Play", modifier = Modifier.clickable { play() }, color = Color.White)
+        Text("Stop", modifier = Modifier.clickable { stop() }, color = Color.White)
     }
 
 }
