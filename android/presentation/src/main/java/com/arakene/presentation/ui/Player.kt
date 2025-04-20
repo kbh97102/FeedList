@@ -120,7 +120,9 @@ fun Player(
      영상 화질 설정
      */
 
-    Box(modifier = modifier.fillMaxSize().background(Color.Black), contentAlignment = Alignment.Center) {
+    Box(modifier = modifier
+        .fillMaxSize()
+        .background(Color.Black), contentAlignment = Alignment.Center) {
         AndroidView(
             factory = { context ->
                 PlayerView(context).apply {
@@ -144,8 +146,10 @@ fun Player(
 
             ControlMenu(
                 play = {
-                    exoPlayer.play()
-                    isPlaying = exoPlayer.isPlaying
+                    if (!exoPlayer.isPlaying) {
+                        exoPlayer.play()
+                        isPlaying = exoPlayer.isPlaying
+                    }
                 },
                 stop = {
                     // TODO Stop 에 다시 Play를 하면 재생이 안된다 그 이유가 뭘까 release 되는걸까? - 닥스보면 release 한다고함
