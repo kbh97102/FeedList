@@ -1,5 +1,6 @@
 package com.arakene.presentation.ui
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -195,12 +196,10 @@ fun Player(
             if (displayQuality) {
                 QualitySetting(qualityList, onClick = {
                     scope.launch {
-
                         // TODO: 영상을 멈추는게 아닌 이어서 재생할 방법은 없을까? 진행 시점을 찍고 거기서 이어서 진행해야하나
-
                         exoPlayer.stop()
                         val mediaItem = MediaItem.Builder()
-                            .setUri(videoDto.videoFiles.firstOrNull()?.link ?: "")
+                            .setUri(it)
                             .build()
 
                         exoPlayer.setMediaItem(mediaItem)
