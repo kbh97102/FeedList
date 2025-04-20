@@ -49,9 +49,6 @@ class VideoViewModel @Inject constructor(
     fun searchVideos(search: String) = viewModelScope.launch {
         getResponse {
             getSearchVideoUseCase(search)
-        }?.let {
-            LogD(it.toString())
-            // Do SomeThing
         }
     }
 
