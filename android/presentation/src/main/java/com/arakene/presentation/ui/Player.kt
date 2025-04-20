@@ -1,6 +1,5 @@
 package com.arakene.presentation.ui
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -26,6 +25,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.media3.common.MediaItem
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
 import com.arakene.domain.responses.VideoDto
@@ -35,6 +35,7 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import kotlinx.coroutines.launch
 
+@UnstableApi
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun Player(
@@ -161,6 +162,8 @@ fun Player(
                 PlayerView(context).apply {
                     this.player = exoPlayer
                     useController = false
+                    // Unstable API, 사실 HLS, DASH 같은 스트리밍 포맷을 쓰면 자동 화질 전환이 가능하다고함
+                    setKeepContentOnPlayerReset(true)
                 }
             }
         )
@@ -195,17 +198,19 @@ fun Player(
 
             if (displayQuality) {
                 QualitySetting(qualityList, onClick = {
+                    if (!isPlaying) {
+                        isPlaying = true
+                    }
+
                     scope.launch {
                         // TODO: 영상을 멈추는게 아닌 이어서 재생할 방법은 없을까? 진행 시점을 찍고 거기서 이어서 진행해야하나
-                        exoPlayer.stop()
-                        val mediaItem = MediaItem.Builder()
-                            .setUri(it)
-                            .build()
+                        val position = exoPlayer.currentPosition
+                        val mediaItem = MediaItem.fromUri(it ?: "")
 
                         exoPlayer.setMediaItem(mediaItem)
+                        exoPlayer.seekTo(position)
                         exoPlayer.playWhenReady = true
                         exoPlayer.prepare()
-                        isPlaying = true
                     }
                 })
             }
