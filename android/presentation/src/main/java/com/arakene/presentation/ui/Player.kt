@@ -1,8 +1,14 @@
 package com.arakene.presentation.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
@@ -14,10 +20,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.media3.common.MediaItem
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
+import com.arakene.presentation.R
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 
@@ -120,9 +129,15 @@ fun Player(
      영상 화질 설정
      */
 
-    Box(modifier = modifier
-        .fillMaxSize()
-        .background(Color.Black), contentAlignment = Alignment.Center) {
+    var displayQuality by remember {
+        mutableStateOf(false)
+    }
+
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .background(Color.Black), contentAlignment = Alignment.BottomEnd
+    ) {
         AndroidView(
             factory = { context ->
                 PlayerView(context).apply {
@@ -142,22 +157,31 @@ fun Player(
             )
         }
 
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
 
-            ControlMenu(
-                play = {
-                    if (!exoPlayer.isPlaying) {
-                        exoPlayer.play()
-                        isPlaying = exoPlayer.isPlaying
-                    }
-                },
-                stop = {
-                    // TODO Stop 에 다시 Play를 하면 재생이 안된다 그 이유가 뭘까 release 되는걸까? - 닥스보면 release 한다고함
-                    exoPlayer.pause()
-                    isPlaying = exoPlayer.isPlaying
-                }
-            )
+        Box{
+            Column(verticalArrangement = Arrangement.spacedBy(15.dp)) {
+                Icon(
+                    painter = painterResource(R.drawable.thumbs),
+                    contentDescription = null,
+                    modifier = Modifier.size(24.dp)
+                )
+
+                Icon(
+                    painter = painterResource(R.drawable.thumbs_down),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(24.dp)
+                        .clickable { displayQuality = true }
+                )
+            }
+
+            if (displayQuality) {
+                QualitySetting(buildList {
+                    repeat(10) { add("test $it") }
+                })
+            }
         }
-    }
 
+
+    }
 }
