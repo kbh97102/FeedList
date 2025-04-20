@@ -1,6 +1,7 @@
 package com.arakene.presentation.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -13,7 +14,8 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun QualitySetting(
-    list: List<String>
+    list: List<Triple<String?, Double?, String?>>,
+    onClick: (String?) -> Unit
 ) {
 
     Column(
@@ -23,7 +25,9 @@ fun QualitySetting(
     ) {
 
         list.forEach {
-            Text("TEXT $it", color = Color.White)
+            Text("TEXT ${it.first}", color = Color.White, modifier = Modifier.clickable {
+                onClick(it.third)
+            })
         }
 
     }
@@ -36,8 +40,9 @@ private fun QualitySettingPreview() {
     QualitySetting(
         buildList {
             repeat(10) {
-                add("it $it")
+//                add("it $it")
             }
-        }
+        },
+        onClick = {}
     )
 }

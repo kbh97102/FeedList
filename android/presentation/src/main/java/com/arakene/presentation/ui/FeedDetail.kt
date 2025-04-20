@@ -46,8 +46,7 @@ fun FeedDetail(
         val target = videos[it]
 
         Player(
-            url = target?.videoFiles?.firstOrNull()?.link ?: "",
-            thumbnailUrl = target?.image ?: "",
+            videoDto = target ?: return@VerticalPager,
             modifier = Modifier.fillMaxSize()
         )
 
