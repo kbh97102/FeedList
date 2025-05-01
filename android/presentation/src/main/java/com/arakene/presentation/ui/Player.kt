@@ -24,6 +24,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.media3.common.MediaItem
+import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
@@ -49,7 +50,21 @@ fun Player(
 
     val context = LocalContext.current
 
+    val mediaItems = remember(videoDto) {
+        videoDto.videoFiles.map { videoFile ->
+            videoFile.let { video ->
+                MediaItem.Builder()
+                    .setUri(video.link)
+                    .setMediaId("Video_${video.id}") // TODO: 임시 테스트를 위한 값
+                    .build()
+            }
+        }
+    }
 
+    /**
+     * Preload하는 건 좋은데 이건 해상도 별로 진행됨
+     * TODO: 위아래 스크롤 시 보다 더 빠르고 자연스러운 이벤트를 위해서는 외부에서 preload된걸 줘야하지 않나
+     */
     val preloadManager = remember {
 
         DefaultPreloadManager.Builder(
@@ -111,52 +126,58 @@ fun Player(
         mutableStateOf(videoDto.videoFiles.firstOrNull()?.link)
     }
 
+    var startTime by remember {
+        mutableStateOf(0L)
+    }
+
     DisposableEffect(Unit) {
-        currentUrl ?: return@DisposableEffect onDispose {
-            exoPlayer.release()
-        }
+
+        exoPlayer.addListener(object : Player.Listener{
+            override fun onPlaybackStateChanged(playbackState: Int) {
+                super.onPlaybackStateChanged(playbackState)
+
+                if (playbackState == Player.STATE_READY) {
+                    LogD("Ready ${System.currentTimeMillis() - startTime}")
+                }
+
+            }
+        })
 
         onDispose {
-            LogD("Dispose")
+            LogD("Dispose ${videoDto.id}")
             exoPlayer.stop()
             exoPlayer.release()
         }
-
     }
 
     LaunchedEffect(videoDto) {
-
-        var count = 0
-
-        val mediaItems = videoDto.videoFiles.map { videoFile ->
-            count++
-            videoFile.link?.let { videoLink ->
-                MediaItem.Builder()
-                    .setUri(videoLink)
-                    .setMediaId("Video_$count") // TODO: 임시 테스트를 위한 값
-                    .build()
-            }
-        }
-
-        mediaItems.filterNotNull().forEachIndexed { index, mediaItem ->
-            preloadManager.add(mediaItem, index)
+        mediaItems.forEachIndexed { index, mediaItem ->
+            /**
+             * 영상 화질 변경했을 때
+             * preloading을 통해 미리 일정 부분 버퍼링한 경우 77 ~ 232 ms가 소모
+             * STAGE_SOURCE_PREPARED로만 한 경우 126 ~ 236 ms 까지 있었고 중간에 466ms 정도로 튄 값이 있었음
+             * 아예 버퍼링을 안한 경우 77 ~ 432 ms로 대부분 높은 편에 속했었음
+             */
+            preloadManager.add(mediaItem, 0)
         }
 
         preloadManager.invalidate()
-
-        // TEST CODE
-        val mediaSource = preloadManager.getMediaSource(mediaItems.first()!!)
-        exoPlayer.setMediaSource(mediaSource!!)
-        exoPlayer.playWhenReady = true
-        exoPlayer.prepare()
-
     }
 
+    LaunchedEffect(currentUrl) {
 
-    /*
-    TODO
-     영상 화질 설정
-     */
+        currentUrl ?: return@LaunchedEffect
+
+
+        val playTarget = mediaItems.find { it.localConfiguration?.uri.toString() == currentUrl }
+            ?: return@LaunchedEffect
+
+        val mediaSource = preloadManager.getMediaSource(playTarget) ?: return@LaunchedEffect
+        startTime = System.currentTimeMillis()
+        exoPlayer.setMediaSource(mediaSource)
+        exoPlayer.playWhenReady = true
+        exoPlayer.prepare()
+    }
 
     var displayQuality by remember {
         mutableStateOf(false)
@@ -193,7 +214,11 @@ fun Player(
                 Icon(
                     painter = painterResource(R.drawable.thumbs),
                     contentDescription = null,
-                    modifier = Modifier.size(24.dp)
+                    modifier = Modifier
+                        .size(24.dp)
+                        .clickable {
+//                            preloadManager.setCurrentPlayingIndex(3)
+                        }
                 )
 
                 Icon(
