@@ -46,6 +46,10 @@ fun Player(
     modifier: Modifier = Modifier
 ) {
 
+    var startTime = remember {
+        0L
+    }
+
     val scope = rememberCoroutineScope()
 
     val context = LocalContext.current
@@ -88,7 +92,7 @@ fun Player(
                 addListener(object : PreloadManagerListener {
                     override fun onCompleted(mediaItem: MediaItem) {
                         super.onCompleted(mediaItem)
-                        LogD("Preload Complete ${mediaItem.mediaMetadata}")
+//                        LogD("Preload Complete ${mediaItem.mediaMetadata}")
                     }
 
                     override fun onError(exception: PreloadException) {
@@ -131,7 +135,14 @@ fun Player(
     }
 
     DisposableEffect(Unit) {
-
+        exoPlayer.addListener(object : Player.Listener{
+            override fun onPlaybackStateChanged(playbackState: Int) {
+                super.onPlaybackStateChanged(playbackState)
+                if (playbackState == Player.STATE_READY) {
+                    LogD("Ready ${videoDto.id} time ${System.currentTimeMillis() - startTime}ms")
+                }
+            }
+        })
 
         onDispose {
             LogD("Dispose ${videoDto.id}")
@@ -163,6 +174,8 @@ fun Player(
             ?: return@LaunchedEffect
 
         val mediaSource = preloadManager.getMediaSource(playTarget) ?: return@LaunchedEffect
+        startTime = System.currentTimeMillis()
+        LogD("prepare Start ${videoDto.id} Time $startTime")
         exoPlayer.setMediaSource(mediaSource)
         exoPlayer.playWhenReady = true
         exoPlayer.prepare()

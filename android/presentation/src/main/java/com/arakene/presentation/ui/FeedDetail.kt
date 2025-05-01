@@ -13,6 +13,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.media3.common.util.UnstableApi
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.arakene.domain.responses.VideoDto
 import com.arakene.presentation.viewmodel.VideoViewModel
@@ -24,6 +25,7 @@ import com.arakene.presentation.viewmodel.VideoViewModel
  *   * 뒤로 가기, 앞으로 가기
  *   * 다음 영상으로, 이전 영상으로
  */
+@UnstableApi
 @Composable
 fun FeedDetail(
     videoDto: VideoDto,
