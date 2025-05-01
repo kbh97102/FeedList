@@ -116,6 +116,10 @@ fun Player(
         )
     }
 
+    var currentPosition by remember {
+        mutableStateOf(0L)
+    }
+
 
     /*
     TODO
@@ -126,22 +130,8 @@ fun Player(
         mutableStateOf(videoDto.videoFiles.firstOrNull()?.link)
     }
 
-    var startTime by remember {
-        mutableStateOf(0L)
-    }
-
     DisposableEffect(Unit) {
 
-        exoPlayer.addListener(object : Player.Listener{
-            override fun onPlaybackStateChanged(playbackState: Int) {
-                super.onPlaybackStateChanged(playbackState)
-
-                if (playbackState == Player.STATE_READY) {
-                    LogD("Ready ${System.currentTimeMillis() - startTime}")
-                }
-
-            }
-        })
 
         onDispose {
             LogD("Dispose ${videoDto.id}")
@@ -173,10 +163,11 @@ fun Player(
             ?: return@LaunchedEffect
 
         val mediaSource = preloadManager.getMediaSource(playTarget) ?: return@LaunchedEffect
-        startTime = System.currentTimeMillis()
         exoPlayer.setMediaSource(mediaSource)
         exoPlayer.playWhenReady = true
         exoPlayer.prepare()
+
+        exoPlayer.seekTo(currentPosition)
     }
 
     var displayQuality by remember {
@@ -237,7 +228,7 @@ fun Player(
                     }
 
                     scope.launch {
-                        // TODO: 영상을 멈추는게 아닌 이어서 재생할 방법은 없을까? 진행 시점을 찍고 거기서 이어서 진행해야하나
+                        currentPosition = exoPlayer.currentPosition
                         currentUrl = it
                     }
                 })
