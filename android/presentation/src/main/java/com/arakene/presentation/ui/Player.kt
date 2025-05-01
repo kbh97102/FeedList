@@ -168,6 +168,7 @@ fun Player(
             .background(Color.Black), contentAlignment = Alignment.BottomEnd
     ) {
         AndroidView(
+            modifier = Modifier.fillMaxSize(),
             factory = { context ->
                 PlayerView(context).apply {
                     useController = false
