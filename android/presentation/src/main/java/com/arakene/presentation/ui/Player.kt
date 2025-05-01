@@ -27,10 +27,6 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
-import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
-import androidx.media3.exoplayer.source.preload.DefaultPreloadManager
-import androidx.media3.exoplayer.source.preload.PreloadException
-import androidx.media3.exoplayer.source.preload.PreloadManagerListener
 import androidx.media3.ui.PlayerView
 import com.arakene.domain.responses.VideoDto
 import com.arakene.presentation.LogD
@@ -43,6 +39,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun Player(
     videoDto: VideoDto,
+    exoPlayer: ExoPlayer,
+    releasePlayer: () -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -65,48 +63,48 @@ fun Player(
         }
     }
 
-    /**
-     * Preload하는 건 좋은데 이건 해상도 별로 진행됨
-     * TODO: 위아래 스크롤 시 보다 더 빠르고 자연스러운 이벤트를 위해서는 외부에서 preload된걸 줘야하지 않나
-     */
-    val preloadManager = remember {
-
-        DefaultPreloadManager.Builder(
-            context
-        ) { rankingData ->
-            when (rankingData) {
-                0 -> DefaultPreloadManager.Status(
-                    DefaultPreloadManager.Status.STAGE_LOADED_FOR_DURATION_MS, 5000
-                )
-
-                1 -> DefaultPreloadManager.Status(
-                    DefaultPreloadManager.Status.STAGE_SOURCE_PREPARED
-                )
-
-                else -> null
-            }
-        }
-            .setMediaSourceFactory(DefaultMediaSourceFactory(context))
-            .build()
-            .apply {
-                addListener(object : PreloadManagerListener {
-                    override fun onCompleted(mediaItem: MediaItem) {
-                        super.onCompleted(mediaItem)
-//                        LogD("Preload Complete ${mediaItem.mediaMetadata}")
-                    }
-
-                    override fun onError(exception: PreloadException) {
-                        super.onError(exception)
-                        LogD("Preload exception $exception")
-                    }
-                })
-            }
-    }
-
-    val exoPlayer = remember(context) {
-        ExoPlayer.Builder(context)
-            .build()
-    }
+//    /**
+//     * Preload하는 건 좋은데 이건 해상도 별로 진행됨
+//     * TODO: 위아래 스크롤 시 보다 더 빠르고 자연스러운 이벤트를 위해서는 외부에서 preload된걸 줘야하지 않나
+//     */
+//    val preloadManager = remember {
+//
+//        DefaultPreloadManager.Builder(
+//            context
+//        ) { rankingData ->
+//            when (rankingData) {
+//                0 -> DefaultPreloadManager.Status(
+//                    DefaultPreloadManager.Status.STAGE_LOADED_FOR_DURATION_MS, 5000
+//                )
+//
+//                1 -> DefaultPreloadManager.Status(
+//                    DefaultPreloadManager.Status.STAGE_SOURCE_PREPARED
+//                )
+//
+//                else -> null
+//            }
+//        }
+//            .setMediaSourceFactory(DefaultMediaSourceFactory(context))
+//            .build()
+//            .apply {
+//                addListener(object : PreloadManagerListener {
+//                    override fun onCompleted(mediaItem: MediaItem) {
+//                        super.onCompleted(mediaItem)
+////                        LogD("Preload Complete ${mediaItem.mediaMetadata}")
+//                    }
+//
+//                    override fun onError(exception: PreloadException) {
+//                        super.onError(exception)
+//                        LogD("Preload exception $exception")
+//                    }
+//                })
+//            }
+//    }
+//
+//    val exoPlayer = remember(context) {
+//        ExoPlayer.Builder(context)
+//            .build()
+//    }
 
     var isPlaying by remember {
         mutableStateOf(exoPlayer.isPlaying)
@@ -135,7 +133,10 @@ fun Player(
     }
 
     DisposableEffect(Unit) {
-        exoPlayer.addListener(object : Player.Listener{
+
+        exoPlayer.playWhenReady = true
+
+        exoPlayer.addListener(object : Player.Listener {
             override fun onPlaybackStateChanged(playbackState: Int) {
                 super.onPlaybackStateChanged(playbackState)
                 if (playbackState == Player.STATE_READY) {
@@ -146,8 +147,7 @@ fun Player(
 
         onDispose {
             LogD("Dispose ${videoDto.id}")
-            exoPlayer.stop()
-            exoPlayer.release()
+            releasePlayer()
         }
     }
 
@@ -159,28 +159,31 @@ fun Player(
              * STAGE_SOURCE_PREPARED로만 한 경우 126 ~ 236 ms 까지 있었고 중간에 466ms 정도로 튄 값이 있었음
              * 아예 버퍼링을 안한 경우 77 ~ 432 ms로 대부분 높은 편에 속했었음
              */
-            preloadManager.add(mediaItem, 0)
+//            preloadManager.add(mediaItem, 0)
         }
 
-        preloadManager.invalidate()
+//        preloadManager.invalidate()
     }
 
     LaunchedEffect(currentUrl) {
 
-        currentUrl ?: return@LaunchedEffect
+        val uri = currentUrl ?: return@LaunchedEffect
 
 
-        val playTarget = mediaItems.find { it.localConfiguration?.uri.toString() == currentUrl }
-            ?: return@LaunchedEffect
+//        val playTarget = mediaItems.find { it.localConfiguration?.uri.toString() == currentUrl }
+//            ?: return@LaunchedEffect
+//
+//        val mediaSource = preloadManager.getMediaSource(playTarget) ?: return@LaunchedEffect
+//        startTime = System.currentTimeMillis()
+//        LogD("prepare Start ${videoDto.id} Time $startTime")
+//        exoPlayer.setMediaSource(mediaSource)
+//        exoPlayer.playWhenReady = true
+//        exoPlayer.prepare()
+//
+//        exoPlayer.seekTo(currentPosition)
 
-        val mediaSource = preloadManager.getMediaSource(playTarget) ?: return@LaunchedEffect
-        startTime = System.currentTimeMillis()
-        LogD("prepare Start ${videoDto.id} Time $startTime")
-        exoPlayer.setMediaSource(mediaSource)
-        exoPlayer.playWhenReady = true
+        exoPlayer.setMediaItem(MediaItem.fromUri(uri))
         exoPlayer.prepare()
-
-        exoPlayer.seekTo(currentPosition)
     }
 
     var displayQuality by remember {

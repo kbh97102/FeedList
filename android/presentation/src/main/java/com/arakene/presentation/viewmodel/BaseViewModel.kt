@@ -1,11 +1,13 @@
 package com.arakene.presentation.viewmodel
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.arakene.domain.responses.ApiResult
 
-open class BaseViewModel : ViewModel() {
+open class BaseViewModel(application: Application) : AndroidViewModel(application) {
 
     private var _error = MutableLiveData<Pair<String, String>?>(null)
     val error: LiveData<Pair<String, String>?> get() = _error

@@ -1,6 +1,7 @@
 package com.arakene.presentation.viewmodel
 
 
+import android.app.Application
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -14,7 +15,7 @@ import com.arakene.domain.usecases.GetPopularVideoUseCase
 import com.arakene.domain.usecases.GetSearchVideoUseCase
 import com.arakene.domain.usecases.GetVideoUseCase
 import com.arakene.domain.usecases.InsertLikeUseCase
-import com.arakene.presentation.LogD
+import com.arakene.presentation.util.PlayerPool
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,8 +30,11 @@ class VideoViewModel @Inject constructor(
     private val getVideoUseCase: GetVideoUseCase,
     private val getAllLikesUseCase: GetAllLikesUseCase,
     private val insertLikeUseCase: InsertLikeUseCase,
-    private val deleteLikeUseCase: DeleteLikeUseCase
-) : BaseViewModel() {
+    private val deleteLikeUseCase: DeleteLikeUseCase,
+    private val application: Application
+) : BaseViewModel(application) {
+
+    private val playerPool = PlayerPool(application.applicationContext)
 
     val videos = MutableStateFlow<PagingData<VideoDto>>(PagingData.empty())
     val testVideos: Flow<PagingData<VideoDto>> get() = videos
@@ -51,6 +55,10 @@ class VideoViewModel @Inject constructor(
             getSearchVideoUseCase(search)
         }
     }
+
+    fun getPlayer(tag: String) = playerPool.getPlayer(tag)
+
+    fun releasePlayer(tag: String) = playerPool.release(tag)
 
     fun getVideo(id: Int) = viewModelScope.launch {
         getResponse {

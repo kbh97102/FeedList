@@ -49,7 +49,11 @@ fun FeedDetail(
 
         Player(
             videoDto = target ?: return@VerticalPager,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
+            exoPlayer = viewModel.getPlayer(target.id.toString()),
+            releasePlayer = {
+                viewModel.releasePlayer(target.id.toString())
+            }
         )
 
     }
