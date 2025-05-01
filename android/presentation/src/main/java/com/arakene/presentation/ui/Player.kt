@@ -35,9 +35,7 @@ import com.arakene.domain.responses.VideoDto
 import com.arakene.presentation.LogD
 import com.arakene.presentation.R
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.util.UUID
 
 @UnstableApi
 @OptIn(ExperimentalGlideComposeApi::class)
@@ -57,9 +55,6 @@ fun Player(
         DefaultPreloadManager.Builder(
             context
         ) { rankingData ->
-
-            LogD("rankingData? $rankingData")
-
             when (rankingData) {
                 0 -> DefaultPreloadManager.Status(
                     DefaultPreloadManager.Status.STAGE_LOADED_FOR_DURATION_MS, 5000
@@ -86,7 +81,6 @@ fun Player(
                         LogD("Preload exception $exception")
                     }
                 })
-
             }
     }
 
@@ -121,60 +115,6 @@ fun Player(
         currentUrl ?: return@DisposableEffect onDispose {
             exoPlayer.release()
         }
-        /**
-         *
-         * Media Item
-         *  Media Item 은 어떤 영상을 재생할지에 대한 정보
-         *
-         * Media Source
-         *  영상을 어떻게 재생할지
-         *
-         *
-         */
-
-        /**
-         *
-         * Media Item
-         *  Media Item 은 어떤 영상을 재생할지에 대한 정보
-         *
-         * Media Source
-         *  영상을 어떻게 재생할지
-         *
-         *
-         */
-
-        /**
-         *
-         * Media Item
-         *  Media Item 은 어떤 영상을 재생할지에 대한 정보
-         *
-         * Media Source
-         *  영상을 어떻게 재생할지
-         *
-         *
-         */
-
-        /**
-         *
-         * Media Item
-         *  Media Item 은 어떤 영상을 재생할지에 대한 정보
-         *
-         * Media Source
-         *  영상을 어떻게 재생할지
-         *
-         *
-         */
-
-
-        exoPlayer.run {
-            // TODO: 뭔지 궁금한 친구들
-//            setImageOutput()
-//            setCameraMotionListener()
-//            setHandleAudioBecomingNoisy()
-//            setImageOutput()
-//            setPreferredAudioDevice()
-//            setVideoEffects()
-        }
 
         onDispose {
             LogD("Dispose")
@@ -199,17 +139,10 @@ fun Player(
         }
 
         mediaItems.filterNotNull().forEachIndexed { index, mediaItem ->
-            LogD("index $index mediaItem ${mediaItem.mediaId}")
             preloadManager.add(mediaItem, index)
         }
 
         preloadManager.invalidate()
-
-        LogD("Start Delay")
-
-        delay(5000)
-
-        LogD("End Delay")
 
         // TEST CODE
         val mediaSource = preloadManager.getMediaSource(mediaItems.first()!!)
@@ -279,13 +212,6 @@ fun Player(
 
                     scope.launch {
                         // TODO: 영상을 멈추는게 아닌 이어서 재생할 방법은 없을까? 진행 시점을 찍고 거기서 이어서 진행해야하나
-//                        val position = exoPlayer.currentPosition
-//                        val mediaItem = MediaItem.fromUri(it ?: "")
-//
-//                        exoPlayer.setMediaItem(mediaItem)
-//                        exoPlayer.seekTo(position)
-//                        exoPlayer.playWhenReady = true
-//                        exoPlayer.prepare()
                         currentUrl = it
                     }
                 })
