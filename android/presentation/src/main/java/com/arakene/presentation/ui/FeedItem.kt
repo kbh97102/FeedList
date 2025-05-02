@@ -174,6 +174,7 @@ fun FeedItem(
                 ),
             factory = { context ->
                 PlayerView(context).apply {
+                    this.player = null
                     this.player = player
                     useController = false
                 }

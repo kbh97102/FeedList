@@ -10,12 +10,16 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.media3.common.util.UnstableApi
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.arakene.domain.responses.VideoDto
+import com.arakene.presentation.LogD
 import com.arakene.presentation.viewmodel.VideoViewModel
 
 /**
@@ -39,13 +43,22 @@ fun FeedDetail(
         videos.itemCount
     }
 
+    val test by remember(state.layoutInfo.visiblePagesInfo) {
+        mutableStateOf(state.layoutInfo.visiblePagesInfo)
+    }
+
     LaunchedEffect(viewModel) {
         viewModel.testMethod()
     }
 
-    VerticalPager(state) {
-
+    VerticalPager(
+        state,
+    ) {
         val target = videos[it]
+
+        LogD("Root current ${state.currentPage} videoIndex $it")
+
+
 
         Player(
             videoDto = target ?: return@VerticalPager,
@@ -53,7 +66,9 @@ fun FeedDetail(
             exoPlayer = viewModel.getPlayer(target.id.toString()),
             releasePlayer = {
                 viewModel.releasePlayer(target.id.toString())
-            }
+            },
+            currentIndex = test.firstOrNull()?.index ?: 0,
+            videoIndex = it
         )
 
     }

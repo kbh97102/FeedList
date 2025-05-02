@@ -19,6 +19,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -32,6 +33,7 @@ import com.arakene.domain.responses.VideoDto
 import com.arakene.presentation.LogD
 import com.arakene.presentation.R
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
 import kotlinx.coroutines.launch
 
 @UnstableApi
@@ -41,8 +43,14 @@ fun Player(
     videoDto: VideoDto,
     exoPlayer: ExoPlayer,
     releasePlayer: () -> Unit,
+    currentIndex: Int,
+    videoIndex: Int,
     modifier: Modifier = Modifier
 ) {
+
+    LaunchedEffect(videoIndex, currentIndex, videoDto) {
+        LogD("Player ID ${videoDto.id} current $currentIndex videoIndex $videoIndex")
+    }
 
     var startTime = remember {
         0L
@@ -132,6 +140,10 @@ fun Player(
         mutableStateOf(videoDto.videoFiles.firstOrNull()?.link)
     }
 
+    LaunchedEffect(isPlaying) {
+        LogD("${videoDto.id} isPlaying $isPlaying")
+    }
+
     DisposableEffect(Unit) {
 
         exoPlayer.playWhenReady = true
@@ -140,7 +152,8 @@ fun Player(
             override fun onPlaybackStateChanged(playbackState: Int) {
                 super.onPlaybackStateChanged(playbackState)
                 if (playbackState == Player.STATE_READY) {
-                    LogD("Ready ${videoDto.id} time ${System.currentTimeMillis() - startTime}ms")
+                    LogD("Ready ${videoDto.id} time ${System.currentTimeMillis() - startTime}ms  currentIndex $currentIndex videoIndex $videoIndex")
+                    isPlaying = true
                 }
             }
         })
@@ -166,7 +179,6 @@ fun Player(
     }
 
     LaunchedEffect(currentUrl) {
-
         val uri = currentUrl ?: return@LaunchedEffect
 
 
@@ -195,6 +207,9 @@ fun Player(
             .fillMaxSize()
             .background(Color.Black), contentAlignment = Alignment.BottomEnd
     ) {
+
+
+
         AndroidView(
             modifier = Modifier.fillMaxSize(),
             factory = { context ->
@@ -205,15 +220,15 @@ fun Player(
             }
         )
 
-//        if (!isPlaying) {
-//            GlideImage(
-//                model = videoDto.image,
-//                contentDescription = null,
-//                contentScale = ContentScale.Fit,
-//                modifier = Modifier
-//                    .fillMaxSize()
-//            )
-//        }
+        if (!isPlaying) {
+            GlideImage(
+                model = videoDto.image,
+                contentDescription = null,
+                contentScale = ContentScale.Fit,
+                modifier = Modifier
+                    .fillMaxSize()
+            )
+        }
 
 
         Box {
