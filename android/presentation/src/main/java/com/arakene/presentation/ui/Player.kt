@@ -48,10 +48,6 @@ fun Player(
     modifier: Modifier = Modifier
 ) {
 
-    LaunchedEffect(videoIndex, currentIndex, videoDto) {
-        LogD("Player ID ${videoDto.id} current $currentIndex videoIndex $videoIndex")
-    }
-
     var startTime = remember {
         0L
     }
@@ -141,18 +137,15 @@ fun Player(
     }
 
     LaunchedEffect(isPlaying) {
-        LogD("${videoDto.id} isPlaying $isPlaying")
+        LogD("videoIndex $videoIndex videoId ${videoDto.id} isPlaying $isPlaying")
     }
 
     DisposableEffect(Unit) {
-
-        exoPlayer.playWhenReady = true
-
         exoPlayer.addListener(object : Player.Listener {
             override fun onPlaybackStateChanged(playbackState: Int) {
                 super.onPlaybackStateChanged(playbackState)
                 if (playbackState == Player.STATE_READY) {
-                    LogD("Ready ${videoDto.id} time ${System.currentTimeMillis() - startTime}ms  currentIndex $currentIndex videoIndex $videoIndex")
+//                    LogD("Ready ${videoDto.id} time ${System.currentTimeMillis() - startTime}ms  currentIndex $currentIndex videoIndex $videoIndex")
                     isPlaying = true
                 }
             }
@@ -178,7 +171,14 @@ fun Player(
 //        preloadManager.invalidate()
     }
 
-    LaunchedEffect(currentUrl) {
+    LaunchedEffect(currentUrl, videoIndex, currentIndex) {
+
+        if (currentIndex != videoIndex) {
+            exoPlayer.playWhenReady = false
+            exoPlayer.prepare()
+            return@LaunchedEffect
+        }
+
         val uri = currentUrl ?: return@LaunchedEffect
 
 
@@ -194,6 +194,8 @@ fun Player(
 //
 //        exoPlayer.seekTo(currentPosition)
 
+        exoPlayer.playWhenReady = true
+        exoPlayer.clearMediaItems()
         exoPlayer.setMediaItem(MediaItem.fromUri(uri))
         exoPlayer.prepare()
     }
@@ -208,8 +210,6 @@ fun Player(
             .background(Color.Black), contentAlignment = Alignment.BottomEnd
     ) {
 
-
-
         AndroidView(
             modifier = Modifier.fillMaxSize(),
             factory = { context ->
@@ -217,18 +217,24 @@ fun Player(
                     useController = false
                     player = exoPlayer
                 }
+            },
+            update = { view ->
+                if (view.player != exoPlayer) {
+                    view.player = exoPlayer
+                }
             }
         )
 
-        if (!isPlaying) {
-            GlideImage(
-                model = videoDto.image,
-                contentDescription = null,
-                contentScale = ContentScale.Fit,
-                modifier = Modifier
-                    .fillMaxSize()
-            )
-        }
+
+//        if (!isPlaying) {
+//            GlideImage(
+//                model = videoDto.image,
+//                contentDescription = null,
+//                contentScale = ContentScale.Fit,
+//                modifier = Modifier
+//                    .fillMaxSize()
+//            )
+//        }
 
 
         Box {

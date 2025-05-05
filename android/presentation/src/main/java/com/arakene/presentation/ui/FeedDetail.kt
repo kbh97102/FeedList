@@ -56,10 +56,6 @@ fun FeedDetail(
     ) {
         val target = videos[it]
 
-        LogD("Root current ${state.currentPage} videoIndex $it")
-
-
-
         Player(
             videoDto = target ?: return@VerticalPager,
             modifier = Modifier.fillMaxSize(),
@@ -67,7 +63,7 @@ fun FeedDetail(
             releasePlayer = {
                 viewModel.releasePlayer(target.id.toString())
             },
-            currentIndex = test.firstOrNull()?.index ?: 0,
+            currentIndex = state.currentPage,
             videoIndex = it
         )
 
