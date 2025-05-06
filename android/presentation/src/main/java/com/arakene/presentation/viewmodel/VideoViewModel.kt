@@ -15,6 +15,7 @@ import com.arakene.domain.usecases.GetPopularVideoUseCase
 import com.arakene.domain.usecases.GetSearchVideoUseCase
 import com.arakene.domain.usecases.GetVideoUseCase
 import com.arakene.domain.usecases.InsertLikeUseCase
+import com.arakene.presentation.LogD
 import com.arakene.presentation.util.PlayerPool
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -47,6 +48,7 @@ class VideoViewModel @Inject constructor(
         getPopularVideoUseCase()
             .collectLatest {
                 videos.value = it
+                LogD("Update Videos in viewModel")
             }
     }
 

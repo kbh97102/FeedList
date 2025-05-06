@@ -19,7 +19,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -28,12 +27,13 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.source.MediaSource
+import androidx.media3.exoplayer.source.preload.DefaultPreloadManager
 import androidx.media3.ui.PlayerView
 import com.arakene.domain.responses.VideoDto
 import com.arakene.presentation.LogD
 import com.arakene.presentation.R
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
-import com.bumptech.glide.integration.compose.GlideImage
 import kotlinx.coroutines.launch
 
 @UnstableApi
@@ -45,6 +45,7 @@ fun Player(
     releasePlayer: () -> Unit,
     currentIndex: Int,
     videoIndex: Int,
+    preloadManager: DefaultPreloadManager,
     modifier: Modifier = Modifier
 ) {
 
@@ -67,48 +68,6 @@ fun Player(
         }
     }
 
-//    /**
-//     * Preload하는 건 좋은데 이건 해상도 별로 진행됨
-//     * TODO: 위아래 스크롤 시 보다 더 빠르고 자연스러운 이벤트를 위해서는 외부에서 preload된걸 줘야하지 않나
-//     */
-//    val preloadManager = remember {
-//
-//        DefaultPreloadManager.Builder(
-//            context
-//        ) { rankingData ->
-//            when (rankingData) {
-//                0 -> DefaultPreloadManager.Status(
-//                    DefaultPreloadManager.Status.STAGE_LOADED_FOR_DURATION_MS, 5000
-//                )
-//
-//                1 -> DefaultPreloadManager.Status(
-//                    DefaultPreloadManager.Status.STAGE_SOURCE_PREPARED
-//                )
-//
-//                else -> null
-//            }
-//        }
-//            .setMediaSourceFactory(DefaultMediaSourceFactory(context))
-//            .build()
-//            .apply {
-//                addListener(object : PreloadManagerListener {
-//                    override fun onCompleted(mediaItem: MediaItem) {
-//                        super.onCompleted(mediaItem)
-////                        LogD("Preload Complete ${mediaItem.mediaMetadata}")
-//                    }
-//
-//                    override fun onError(exception: PreloadException) {
-//                        super.onError(exception)
-//                        LogD("Preload exception $exception")
-//                    }
-//                })
-//            }
-//    }
-//
-//    val exoPlayer = remember(context) {
-//        ExoPlayer.Builder(context)
-//            .build()
-//    }
 
     var isPlaying by remember {
         mutableStateOf(exoPlayer.isPlaying)
@@ -171,11 +130,12 @@ fun Player(
 //        preloadManager.invalidate()
     }
 
-    LaunchedEffect(currentUrl, videoIndex, currentIndex) {
+    LaunchedEffect(preloadManager, videoIndex, currentIndex) {
 
         if (currentIndex != videoIndex) {
             exoPlayer.playWhenReady = false
             exoPlayer.prepare()
+            LogD("여기서 걸러지니? 1")
             return@LaunchedEffect
         }
 
@@ -196,7 +156,24 @@ fun Player(
 
         exoPlayer.playWhenReady = true
         exoPlayer.clearMediaItems()
-        exoPlayer.setMediaItem(MediaItem.fromUri(uri))
+//        exoPlayer.setMediaItem(MediaItem.fromUri(uri))
+        val mediaSource = preloadManager.getMediaSource(MediaItem.Builder()
+            .setMediaId("Video_${videoDto.id}")
+            .setUri(videoDto.videoFiles.first().link)
+            .build())
+
+        if (mediaSource == null) {
+            exoPlayer.setMediaItem(
+                MediaItem.fromUri(videoDto.videoFiles.first().link ?: "")
+            )
+
+            LogD("videoID ${videoDto.id} preload null")
+
+        } else {
+            exoPlayer.setMediaSource(mediaSource)
+            LogD("videoID ${videoDto.id} preload Success")
+        }
+
         exoPlayer.prepare()
     }
 
