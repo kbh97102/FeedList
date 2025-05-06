@@ -162,6 +162,11 @@ fun Player(
             .setUri(videoDto.videoFiles.first().link)
             .build())
 
+        /*
+        TODO preload가 완료되기 전에 찾으면서 null이 오는 듯 한데 이걸 어떻게 하는게 좋을까
+        TODO 섬네일을 먼저 보여주면되니 이건 preload에서 가져오지말고 videoDto에서 가져와서 사용해보자 exoPlayer image 기능을 활용해볼 수 있을까?
+         */
+
         if (mediaSource == null) {
             exoPlayer.setMediaItem(
                 MediaItem.fromUri(videoDto.videoFiles.first().link ?: "")

@@ -108,36 +108,27 @@ fun FeedDetail(
 //        derivedStateOf { videos.itemSnapshotList }
 //    }
 
-    LaunchedEffect(videos.hashCode()) {
-
+    LaunchedEffect(state.currentPage) {
         val currentPage = state.currentPage
+        val preloadRange = (currentPage - 2)..(currentPage + 2)
 
-        if (currentPage % 10 != 0) {
-            return@LaunchedEffect
-        }
+        preloadRange.forEach { index ->
+            if (index == currentPage) return@forEach
 
-        val currentVideos = videos.itemSnapshotList
+            // index가 허용 범위 내에 있는지 확인
+            if (index < 0 || index >= videos.itemCount) return@forEach
 
-        LogD("preload start // size ${currentVideos.size}")
+            val video = videos.itemSnapshotList[index] ?: return@forEach
 
-        if (currentVideos.isEmpty()) {
-            LogD("videos empty ${currentVideos.size} ${currentPage}")
-            return@LaunchedEffect
-        }
+            val mediaItem = MediaItem.Builder()
+                .setMediaId("Video_${video.id}")
+                .setUri(video.videoFiles.firstOrNull()?.link ?: "")
+                .build()
 
-        currentVideos.forEach { video ->
-            video ?: return@forEach
-            preloadManager.add(
-                MediaItem.Builder()
-                    .setMediaId("Video_${video.id}")
-                    .setUri(video.videoFiles.first().link)
-                    .build(),
-                0
-            )
+            preloadManager.add(mediaItem, 0)
         }
 
         preloadManager.invalidate()
-
     }
 
 
