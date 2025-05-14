@@ -10,7 +10,6 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,7 +27,6 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.arakene.domain.responses.VideoDto
 import com.arakene.presentation.LogD
 import com.arakene.presentation.viewmodel.VideoViewModel
-import org.chromium.base.Log
 
 /**
  *   * 영상 전체화면으로 전환
@@ -112,22 +110,28 @@ fun FeedDetail(
         val currentPage = state.currentPage
         val preloadRange = (currentPage - 2)..(currentPage + 2)
 
-        preloadRange.forEach { index ->
-            if (index == currentPage) return@forEach
+        val videoSnapShot = videos.itemSnapshotList
 
-            // index가 허용 범위 내에 있는지 확인
-            if (index < 0 || index >= videos.itemCount) return@forEach
-
-            val video = videos.itemSnapshotList[index] ?: return@forEach
-
-            val mediaItem = MediaItem.Builder()
-                .setMediaId("Video_${video.id}")
-                .setUri(video.videoFiles.firstOrNull()?.link ?: "")
-                .build()
-
-            preloadManager.add(mediaItem, 0)
+        // TODO: 불필요한 preload를 방지할 좋은 방법은 뭐가있을까
+        // TODO: 이런 방식으로하려면 index 계산 방식을 조금 수정해야함
+        if (currentPage % 2 != 0) {
+            LogD("not invalidate")
+            return@LaunchedEffect
         }
 
+        preloadRange.forEach { index ->
+            // index가 허용 범위 내에 있는지 확인
+            if (index != currentPage && index in 0 until videoSnapShot.size) {
+                val video = videos.itemSnapshotList[index] ?: return@forEach
+                val mediaItem = MediaItem.Builder()
+                    .setMediaId("Video_${video.id}".also { LogD("Add preload $it") })
+                    .setUri(video.videoFiles.firstOrNull()?.link ?: "")
+                    .build()
+
+                preloadManager.add(mediaItem, 0)
+            }
+        }
+        LogD("invalidate")
         preloadManager.invalidate()
     }
 
