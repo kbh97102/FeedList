@@ -1,5 +1,9 @@
 package com.arakene.presentation.ui
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -20,6 +24,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -32,8 +37,10 @@ import androidx.media3.ui.PlayerView
 import com.arakene.domain.responses.VideoDto
 import com.arakene.presentation.LogD
 import com.arakene.presentation.R
+import com.arakene.presentation.util.noEffectClickable
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @UnstableApi
@@ -65,6 +72,10 @@ fun Player(
 
     var currentPosition by remember {
         mutableStateOf(0L)
+    }
+
+    var displayPlayButton by remember {
+        mutableStateOf(false)
     }
 
     /*
@@ -127,11 +138,24 @@ fun Player(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(Color.Black), contentAlignment = Alignment.BottomEnd
+            .background(Color.Black), contentAlignment = Alignment.Center
     ) {
 
         AndroidView(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .noEffectClickable {
+                    if (exoPlayer.isPlaying) {
+                        exoPlayer.pause()
+                    } else {
+                        exoPlayer.play()
+                    }
+                    displayPlayButton = true
+                    scope.launch {
+                        delay(1000L)
+                        displayPlayButton = false
+                    }
+                },
             factory = { context ->
                 PlayerView(context).apply {
                     useController = false
@@ -154,9 +178,30 @@ fun Player(
             )
         }
 
+        // TODO: 애니메이션은 차후에 변경
+        AnimatedVisibility(
+            visible = displayPlayButton,
+            enter = fadeIn(),
+            exit = fadeOut()
+        ) {
+            Image(
+                painter =
+                    if (exoPlayer.isPlaying) {
+                        painterResource(R.drawable.icn_play)
+                    } else {
+                        painterResource(R.drawable.icn_pause)
+                    },
+                contentDescription = null,
+                modifier = Modifier.size(50.dp),
+                colorFilter = ColorFilter.tint(Color.White)
+            )
+        }
 
-        Box(Modifier.padding(end = 10.dp, bottom = 10.dp)) {
-            Column(verticalArrangement = Arrangement.spacedBy(15.dp)) {
+        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.BottomEnd) {
+            Column(
+                modifier = Modifier.padding(end = 10.dp, bottom = 10.dp),
+                verticalArrangement = Arrangement.spacedBy(15.dp)
+            ) {
                 Icon(
                     painter = painterResource(R.drawable.thumbs),
                     contentDescription = null,
