@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -19,7 +20,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -27,7 +27,6 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
-import androidx.media3.exoplayer.source.MediaSource
 import androidx.media3.exoplayer.source.preload.DefaultPreloadManager
 import androidx.media3.ui.PlayerView
 import com.arakene.domain.responses.VideoDto
@@ -103,10 +102,12 @@ fun Player(
 
         exoPlayer.playWhenReady = true
         exoPlayer.clearMediaItems()
-        val mediaSource = preloadManager.getMediaSource(MediaItem.Builder()
-            .setMediaId("Video_${videoDto.id}")
-            .setUri(videoDto.videoFiles.first().link)
-            .build())
+        val mediaSource = preloadManager.getMediaSource(
+            MediaItem.Builder()
+                .setMediaId("Video_${videoDto.id}")
+                .setUri(videoDto.videoFiles.first().link)
+                .build()
+        )
 
         if (mediaSource == null) {
             exoPlayer.setMediaItem(
@@ -154,21 +155,23 @@ fun Player(
         }
 
 
-        Box {
+        Box(Modifier.padding(end = 10.dp, bottom = 10.dp)) {
             Column(verticalArrangement = Arrangement.spacedBy(15.dp)) {
                 Icon(
                     painter = painterResource(R.drawable.thumbs),
                     contentDescription = null,
                     modifier = Modifier
-                        .size(24.dp)
+                        .size(36.dp),
+                    tint = Color.White
                 )
 
                 Icon(
                     painter = painterResource(R.drawable.thumbs_down),
                     contentDescription = null,
                     modifier = Modifier
-                        .size(24.dp)
-                        .clickable { displayQuality = true }
+                        .size(36.dp)
+                        .clickable { displayQuality = true },
+                    tint = Color.White
                 )
             }
 
