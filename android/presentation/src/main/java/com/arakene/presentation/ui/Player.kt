@@ -34,6 +34,7 @@ import com.arakene.domain.responses.VideoDto
 import com.arakene.presentation.LogD
 import com.arakene.presentation.R
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
 import kotlinx.coroutines.launch
 
 @UnstableApi
@@ -206,16 +207,14 @@ fun Player(
             }
         )
 
-
-//        if (!isPlaying) {
-//            GlideImage(
-//                model = videoDto.image,
-//                contentDescription = null,
-//                contentScale = ContentScale.Fit,
-//                modifier = Modifier
-//                    .fillMaxSize()
-//            )
-//        }
+        if (!isPlaying) {
+            GlideImage(
+                model = videoDto.image,
+                contentDescription = null,
+                modifier = Modifier
+                    .fillMaxSize()
+            )
+        }
 
 
         Box {
