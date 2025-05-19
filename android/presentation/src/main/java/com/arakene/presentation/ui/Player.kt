@@ -50,25 +50,7 @@ fun Player(
     modifier: Modifier = Modifier
 ) {
 
-    var startTime = remember {
-        0L
-    }
-
     val scope = rememberCoroutineScope()
-
-    val context = LocalContext.current
-
-    val mediaItems = remember(videoDto) {
-        videoDto.videoFiles.map { videoFile ->
-            videoFile.let { video ->
-                MediaItem.Builder()
-                    .setUri(video.link)
-                    .setMediaId("Video_${video.id}") // TODO: 임시 테스트를 위한 값
-                    .build()
-            }
-        }
-    }
-
 
     var isPlaying by remember {
         mutableStateOf(exoPlayer.isPlaying)
@@ -86,7 +68,6 @@ fun Player(
         mutableStateOf(0L)
     }
 
-
     /*
     TODO
      화면 회전 시 exoPlayer 돌아가는가?
@@ -96,16 +77,11 @@ fun Player(
         mutableStateOf(videoDto.videoFiles.firstOrNull()?.link)
     }
 
-    LaunchedEffect(isPlaying) {
-        LogD("videoIndex $videoIndex videoId ${videoDto.id} isPlaying $isPlaying")
-    }
-
     DisposableEffect(Unit) {
         exoPlayer.addListener(object : Player.Listener {
             override fun onPlaybackStateChanged(playbackState: Int) {
                 super.onPlaybackStateChanged(playbackState)
                 if (playbackState == Player.STATE_READY) {
-//                    LogD("Ready ${videoDto.id} time ${System.currentTimeMillis() - startTime}ms  currentIndex $currentIndex videoIndex $videoIndex")
                     isPlaying = true
                 }
             }
@@ -117,20 +93,6 @@ fun Player(
         }
     }
 
-    LaunchedEffect(videoDto) {
-        mediaItems.forEachIndexed { index, mediaItem ->
-            /**
-             * 영상 화질 변경했을 때
-             * preloading을 통해 미리 일정 부분 버퍼링한 경우 77 ~ 232 ms가 소모
-             * STAGE_SOURCE_PREPARED로만 한 경우 126 ~ 236 ms 까지 있었고 중간에 466ms 정도로 튄 값이 있었음
-             * 아예 버퍼링을 안한 경우 77 ~ 432 ms로 대부분 높은 편에 속했었음
-             */
-//            preloadManager.add(mediaItem, 0)
-        }
-
-//        preloadManager.invalidate()
-    }
-
     LaunchedEffect(preloadManager, videoIndex, currentIndex) {
 
         if (currentIndex != videoIndex) {
@@ -139,44 +101,19 @@ fun Player(
             return@LaunchedEffect
         }
 
-        val uri = currentUrl ?: return@LaunchedEffect
-
-
-//        val playTarget = mediaItems.find { it.localConfiguration?.uri.toString() == currentUrl }
-//            ?: return@LaunchedEffect
-//
-//        val mediaSource = preloadManager.getMediaSource(playTarget) ?: return@LaunchedEffect
-//        startTime = System.currentTimeMillis()
-//        LogD("prepare Start ${videoDto.id} Time $startTime")
-//        exoPlayer.setMediaSource(mediaSource)
-//        exoPlayer.playWhenReady = true
-//        exoPlayer.prepare()
-//
-//        exoPlayer.seekTo(currentPosition)
-
         exoPlayer.playWhenReady = true
         exoPlayer.clearMediaItems()
-//        exoPlayer.setMediaItem(MediaItem.fromUri(uri))
         val mediaSource = preloadManager.getMediaSource(MediaItem.Builder()
             .setMediaId("Video_${videoDto.id}")
             .setUri(videoDto.videoFiles.first().link)
             .build())
 
-        /*
-        TODO preload가 완료되기 전에 찾으면서 null이 오는 듯 한데 이걸 어떻게 하는게 좋을까 - 1단 해결
-        TODO 섬네일을 먼저 보여주면되니 이건 preload에서 가져오지말고 videoDto에서 가져와서 사용해보자 exoPlayer image 기능을 활용해볼 수 있을까?
-         */
-
         if (mediaSource == null) {
             exoPlayer.setMediaItem(
                 MediaItem.fromUri(videoDto.videoFiles.first().link ?: "")
             )
-
-            LogD("videoID ${videoDto.id} preload null")
-
         } else {
             exoPlayer.setMediaSource(mediaSource)
-            LogD("videoID ${videoDto.id} preload Success")
         }
 
         exoPlayer.prepare()
@@ -224,9 +161,6 @@ fun Player(
                     contentDescription = null,
                     modifier = Modifier
                         .size(24.dp)
-                        .clickable {
-//                            preloadManager.setCurrentPlayingIndex(3)
-                        }
                 )
 
                 Icon(
